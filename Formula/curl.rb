@@ -18,8 +18,8 @@ class Curl < Formula
     depends_on "automake" => :build
     depends_on "libtool" => :build
     depends_on "rust" => :build
-    depends_on "crustls"
-    depends_on "hyper"
+    depends_on "meterup/safe/crustls"
+    depends_on "meterup/safe/hyper"
   end
 
   keg_only :provided_by_macos
@@ -57,8 +57,8 @@ class Curl < Formula
     if build.head?
       # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
       args += %W[
-        --with-hyper=#{Formula["hyper"].opt_prefix}
-        --with-rustls=#{Formula["crustls"].opt_prefix}
+        --with-hyper=#{Formula["meterup/safe/hyper"].opt_prefix}
+        --with-rustls=#{Formula["meterup/safe/crustls"].opt_prefix}
         --without-ssl
         --enable-debug
       ]
