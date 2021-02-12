@@ -1,0 +1,100 @@
+class Curl < Formula
+  desc "Get a file from an HTTP, HTTPS or FTP server"
+  homepage "https://curl.haxx.se/"
+  # Head only until 7.76.0 is released.
+  # url "https://curl.haxx.se/download/curl-7.75.0.tar.bz2"
+  # sha256 "50552d4501c178e4cc68baaecc487f466a3d6d19bbf4e50a01869effb316d026"
+  license "curl"
+
+  livecheck do
+    url "https://curl.haxx.se/download/"
+    regex(/href=.*?curl[._-]v?(.*?)\.t/i)
+  end
+
+  head do
+    url "https://github.com/curl/curl.git"
+
+    depends_on "autoconf" => :build
+    depends_on "automake" => :build
+    depends_on "libtool" => :build
+    depends_on "rust" => :build
+    depends_on "crustls"
+    depends_on "hyper"
+  end
+
+  keg_only :provided_by_macos
+
+  depends_on "pkg-config" => :build
+  depends_on "brotli"
+  depends_on "libidn2"
+  depends_on "libmetalink"
+  depends_on "libssh2"
+  depends_on "nghttp2"
+  depends_on "openldap"
+  depends_on "openssl@1.1"
+  depends_on "rtmpdump"
+  depends_on "zstd"
+
+  uses_from_macos "krb5"
+  uses_from_macos "zlib"
+
+  def install
+    system "autoreconf -fi" if build.head?
+
+    args = %W[
+      --disable-dependency-tracking
+      --disable-silent-rules
+      --prefix=#{prefix}
+      --without-ca-bundle
+      --without-ca-path
+      --with-secure-transport
+      --with-gssapi
+      --with-libidn2
+      --with-libmetalink
+      --with-librtmp
+      --without-libpsl
+    ]
+    if build.head?
+      # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
+      args += %W[
+        --with-hyper=#{Formula["hyper"].opt_prefix}
+        --with-rustls=#{Formula["crustls"].opt_prefix}
+        --without-ssl
+        --enable-debug
+      ]
+    else
+      args += %W[
+        --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
+        --with-default-ssl-backend=openssl
+        --disable-debug
+        --with-libssh2
+        --with-ca-fallback
+      ]
+    end
+
+    on_macos do
+      args << "--with-gssapi"
+    end
+
+    on_linux do
+      args << "--with-gssapi=#{Formula["krb5"].opt_prefix}"
+    end
+
+    system "./configure", *args
+    system "make", "install"
+    system "make", "install", "-C", "scripts"
+    libexec.install "lib/mk-ca-bundle.pl"
+  end
+
+  test do
+    # Fetch the curl tarball and see that the checksum matches.
+    # This requires a network connection, but so does Homebrew in general.
+    filename = (testpath/"test.tar.gz")
+    system "#{bin}/curl", "-L", stable.url, "-o", filename
+    filename.verify_checksum stable.checksum
+
+    system libexec/"mk-ca-bundle.pl", "test.pem"
+    assert_predicate testpath/"test.pem", :exist?
+    assert_predicate testpath/"certdata.txt", :exist?
+  end
+end
