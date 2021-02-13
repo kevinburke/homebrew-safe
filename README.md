@@ -15,6 +15,16 @@ Curl is compiled with the rustls and Hyper backend instead of openssl, which
 means that TLS connections are made with Rust. Note that this means TLS 1.1 and
 below are not supported.
 
+#### git
+
+Git is compiled with libcurl from this repository.
+
+## How to check the right versions were compiled in?
+
+Use `objdump -p <binary>` to inspect the symbols for a given binary - they
+should point to the Homebrew compiled libs instead of e.g. `/usr/lib/curl.dylib`
+which is the default Mac version.
+
 ## Questions
 
 If you'd like to see a package here, please open a ticket!
