@@ -52,12 +52,12 @@ class Curl < Formula
       --with-libmetalink
       --with-librtmp
       --without-libpsl
+      --with-hyper=#{Formula["meterup/safe/hyper"].opt_prefix}
+      --with-rustls=#{Formula["meterup/safe/crustls"].opt_prefix}
     ]
     if build.head?
       # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
       args += %W[
-        --with-hyper=#{Formula["meterup/safe/hyper"].opt_prefix}
-        --with-rustls=#{Formula["meterup/safe/crustls"].opt_prefix}
         --without-ssl
         --enable-debug
       ]
