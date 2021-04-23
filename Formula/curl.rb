@@ -40,13 +40,14 @@ class Curl < Formula
   def install
     system "autoreconf -fi" if build.head?
 
+    ENV.append "LDFLAGS", "-framework CoreFoundation -framework Security"
+
     args = %W[
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
       --without-ca-bundle
       --without-ca-path
-      --with-secure-transport
       --with-gssapi
       --with-libidn2
       --with-libmetalink
@@ -68,6 +69,7 @@ class Curl < Formula
         --disable-debug
         --with-libssh2
         --with-ca-fallback
+        --with-secure-transport
       ]
     end
 
