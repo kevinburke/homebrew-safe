@@ -42,6 +42,7 @@ class Curl < Formula
 
     ENV.append "LDFLAGS", "-framework CoreFoundation -framework Security"
 
+    # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
     args = %W[
       --disable-dependency-tracking
       --disable-silent-rules
@@ -50,23 +51,17 @@ class Curl < Formula
       --without-ca-path
       --with-gssapi
       --with-libidn2
-      --with-libmetalink
       --with-librtmp
       --without-libpsl
+      --without-ssl
+      --enable-debug
       --with-hyper=#{Formula["meterup/safe/hyper"].opt_prefix}
       --with-rustls=#{Formula["meterup/safe/crustls"].opt_prefix}
+      --with-default-ssl-backend=rustls
     ]
     if build.head?
-      # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
-      args += %W[
-        --without-ssl
-        --enable-debug
-      ]
     else
       args += %W[
-        --with-ssl=#{Formula["openssl@1.1"].opt_prefix}
-        --with-default-ssl-backend=openssl
-        --disable-debug
         --with-libssh2
         --with-ca-fallback
         --with-secure-transport
