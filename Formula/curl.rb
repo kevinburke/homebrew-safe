@@ -40,8 +40,6 @@ class Curl < Formula
   def install
     system "autoreconf -fi" if build.head?
 
-    ENV.append "LDFLAGS", "-framework CoreFoundation -framework Security"
-
     # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
     args = %W[
       --disable-dependency-tracking
