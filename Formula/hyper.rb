@@ -1,8 +1,8 @@
 class Hyper < Formula
   desc "HTTP implementation for Rust"
   homepage "https://github.com/hyperium/hyper"
-  url "https://github.com/hyperium/hyper/archive/v0.14.7.tar.gz"
-  sha256 "7f497ff1ffbf3d7927edc228100aa13512a9c8e60de442426b8dd36442ddddc5"
+  url "https://github.com/hyperium/hyper/archive/v0.14.11.tar.gz"
+  sha256 "7b7ee07159843386f8489cacb3083f28b76bd604c36d0f5f5e7a34c6e2fd5f78"
   head "https://github.com/hyperium/hyper.git"
 
   depends_on "rust" => :build

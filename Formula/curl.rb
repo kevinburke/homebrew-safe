@@ -1,8 +1,8 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.76.1.tar.bz2"
-  sha256 "7a8e184d7d31312c4ebf6a8cb59cd757e61b2b2833a9ed4f9bf708066e7695e9"
+  url "https://curl.haxx.se/download/curl-7.78.0.tar.bz2"
+  sha256 "98530b317dc95ccb324bbe4f834f07bb642fbc393b794ddf3434f246a71ea44a"
   license "curl"
 
   livecheck do
@@ -26,11 +26,8 @@ class Curl < Formula
   depends_on "pkg-config" => :build
   depends_on "brotli"
   depends_on "libidn2"
-  depends_on "libmetalink"
   depends_on "libssh2"
-  depends_on "nghttp2"
   depends_on "openldap"
-  depends_on "openssl@1.1"
   depends_on "rtmpdump"
   depends_on "zstd"
 
@@ -45,29 +42,24 @@ class Curl < Formula
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
-      --without-ca-bundle
       --without-ca-path
       --with-gssapi
       --with-libidn2
       --with-librtmp
       --without-libpsl
+      --without-nghttp2
+      --without-metalink
       --without-ssl
       --enable-debug
       --with-hyper=#{Formula["meterup/safe/hyper"].opt_prefix}
       --with-rustls=#{Formula["meterup/safe/crustls"].opt_prefix}
       --with-default-ssl-backend=rustls
     ]
-    if build.head?
-    else
-      args += %W[
-        --with-libssh2
-        --with-ca-fallback
-        --with-secure-transport
-      ]
-    end
+    # --without-ca-bundle
 
     on_macos do
       args << "--with-gssapi"
+      ENV.append "CPPFLAGS", "-framework Security"
     end
 
     on_linux do
