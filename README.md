@@ -5,7 +5,7 @@ would typically find, like openssl, have been replaced with versions written in
 languages that prevent errors like use-after-free.
 
 ```
-brew install --HEAD meterup/safe/curl
+brew install --HEAD kevinburke/safe/curl
 ```
 
 For more on why this is important, see
