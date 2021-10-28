@@ -8,6 +8,7 @@ class Crustls < Formula
   depends_on "rust" => :build
 
   def install
+    # https://github.com/rustls/rustls-ffi/issues/113
     ENV.append "PROFILE", "release"
     system "make"
     system "make", "install", "DESTDIR=#{prefix}"
