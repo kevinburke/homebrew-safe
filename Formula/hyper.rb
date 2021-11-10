@@ -10,8 +10,8 @@ class Hyper < Formula
   def install
     ENV["RUSTFLAGS"] = "--cfg hyper_unstable_ffi"
     system "cargo", "build", "--release", "--features", "client,http1,http2,ffi", "--target-dir", buildpath
-    lib.install Dir["release/libhyper.a"]
-    lib.install Dir["release/libhyper.dylib"]
-    include.install Dir["capi/include/hyper.h"]
+    (prefix/"target/release").install Dir["release/libhyper.a"]
+    (prefix/"target/release").install Dir["release/libhyper.dylib"]
+    (prefix/"capi/include").install Dir["capi/include/hyper.h"]
   end
 end
