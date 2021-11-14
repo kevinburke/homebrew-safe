@@ -1,8 +1,8 @@
 class RustlsFfi < Formula
   desc "C bindings for rustls"
   homepage "https://github.com/rustls/rustls-ffi"
-  url "https://github.com/rustls/rustls-ffi/archive/v0.8.0.tar.gz"
-  sha256 "438159d436c63f0de1b9d830a74d92997e9fb545403e4ea8742a371cb2dfafbd"
+  url "https://github.com/rustls/rustls-ffi/archive/v0.8.1.tar.gz"
+  sha256 "944b155f58acc657eea75c36f5bc96efa2c108c25ad104e91c51f14604e4e386"
   head "https://github.com/rustls/rustls-ffi.git", :branch => "main"
 
   depends_on "rust" => :build
