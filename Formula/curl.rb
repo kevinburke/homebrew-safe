@@ -1,8 +1,8 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.79.1.tar.bz2"
-  sha256 "de62c4ab9a9316393962e8b94777a570bb9f71feb580fb4475e412f2f9387851"
+  url "https://curl.haxx.se/download/curl-7.80.0.tar.bz2"
+  sha256 "dd0d150e49cd950aff35e16b628edf04927f0289df42883750cf952bb858189c"
   license "curl"
 
   livecheck do
@@ -18,7 +18,6 @@ class Curl < Formula
     depends_on "libtool" => :build
     depends_on "rust" => :build
     depends_on "kevinburke/safe/rustls-ffi"
-    depends_on "kevinburke/safe/hyper"
   end
 
   keg_only :provided_by_macos
@@ -30,6 +29,8 @@ class Curl < Formula
   depends_on "openldap"
   depends_on "rtmpdump"
   depends_on "zstd"
+  depends_on "kevinburke/safe/rustls-ffi"
+  depends_on "kevinburke/safe/hyper"
 
   uses_from_macos "krb5"
   uses_from_macos "zlib"
