@@ -1,12 +1,15 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
-  homepage "https://curl.haxx.se/"
-  url "https://curl.haxx.se/download/curl-7.80.0.tar.bz2"
-  sha256 "dd0d150e49cd950aff35e16b628edf04927f0289df42883750cf952bb858189c"
+  homepage "https://curl.se"
+  url "https://curl.se/download/curl-7.81.0.tar.bz2"
+  mirror "https://github.com/curl/curl/releases/download/curl-7_80_0/curl-7.81.0.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/curl-7.81.0.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/legacy/curl-7.81.0.tar.bz2"
+  sha256 "1e7a38d7018ec060f1f16df839854f0889e94e122c4cfa5d3a37c2dc56f1e258"
   license "curl"
 
   livecheck do
-    url "https://curl.haxx.se/download/"
+    url "https://curl.se/download/"
     regex(/href=.*?curl[._-]v?(.*?)\.t/i)
   end
 
@@ -36,7 +39,7 @@ class Curl < Formula
   uses_from_macos "zlib"
 
   def install
-    system "autoreconf -fi" if build.head?
+    system "./buildconf" if build.head?
 
     # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
     args = %W[
