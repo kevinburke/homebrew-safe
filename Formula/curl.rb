@@ -47,7 +47,6 @@ class Curl < Formula
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
-      --without-ca-bundle
       --without-ca-path
       --with-libidn2
       --with-librtmp
