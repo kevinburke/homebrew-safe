@@ -4,7 +4,7 @@ class Buildkite < Formula
   url "https://github.com/kevinburke/buildkite/archive/v0.10.tar.gz"
   sha256 "d207c1adc7b753d75f580b19ad35a55a4741cd2205b264ab8fcc0a7a98d41fa4"
   license "MIT"
-  head "https://github.com/kevinburke/buildkite.git", branch: "master"
+  head "https://github.com/kevinburke/buildkite.git", branch: "main"
 
   depends_on "go"
 
