@@ -16,15 +16,15 @@ class Curl < Formula
   head do
     url "https://github.com/curl/curl.git"
 
-    depends_on "autoconf" => :build
-    depends_on "automake" => :build
-    depends_on "libtool" => :build
     depends_on "rust" => :build
     depends_on "kevinburke/safe/rustls-ffi"
   end
 
   keg_only :provided_by_macos
 
+  depends_on "autoconf" => :build
+  depends_on "automake" => :build
+  depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "brotli"
   depends_on "libidn2"
@@ -39,7 +39,9 @@ class Curl < Formula
   uses_from_macos "zlib"
 
   def install
-    system "./buildconf" if build.head?
+    inreplace "configure.ac", "capi/include", "include"
+    inreplace "configure.ac", "target/debug", "lib"
+    system "autoreconf", "-fi"
 
     # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
     args = %W[
