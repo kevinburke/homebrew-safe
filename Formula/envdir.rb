@@ -1,8 +1,8 @@
 class Envdir < Formula
   desc "CLI tool for loading/editing environment variables"
   homepage "https://github.com/kevinburke/envdir"
-  url "https://github.com/kevinburke/envdir/archive/v0.2.tar.gz"
-  sha256 "8980038a021a9636b39d74e9795317f8852a788d16a5314ba4415e191b316f43"
+  url "https://github.com/kevinburke/envdir/archive/v0.5.tar.gz"
+  sha256 "3e11777a63ca0fbf41038f5da0e3034b553ab3c78d8c998678c1fba195c24782"
   license "MIT"
   head "https://github.com/kevinburke/envdir.git", branch: "main"
 
