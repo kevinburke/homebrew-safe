@@ -1,8 +1,10 @@
 class Hyper < Formula
+  VERSION = "1.0.0-rc.3"
+
   desc "HTTP implementation for Rust"
   homepage "https://github.com/hyperium/hyper"
-  url "https://github.com/hyperium/hyper/archive/v0.14.25.tar.gz"
-  sha256 "934cc4da9c656f06f3d9046ea26904a8bfa3c73d1408945a13635cddd3c091a3"
+  url "https://github.com/hyperium/hyper/archive/v#{VERSION}.tar.gz"
+  sha256 "457a3278e851ab455be386b2fd7ca25a333724060fc49299409c44d42fddd3b3"
   head "https://github.com/hyperium/hyper.git"
 
   depends_on "rust" => :build
