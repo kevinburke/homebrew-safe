@@ -1,11 +1,12 @@
 class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.se"
-  url "https://curl.se/download/curl-7.88.1.tar.bz2"
-  mirror "https://github.com/curl/curl/releases/download/curl-7_88_1/curl-7.88.1.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/curl-7.88.1.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/legacy/curl-7.88.1.tar.bz2"
-  sha256 "8224b45cce12abde039c12dc0711b7ea85b104b9ad534d6e4c5b4e188a61c907"
+  # Don't forget to update both instances of the version in the GitHub mirror URL.
+  url "https://curl.se/download/curl-8.2.1.tar.bz2"
+  mirror "https://github.com/curl/curl/releases/download/curl-8_2_1/curl-8.2.1.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/curl-8.2.1.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/legacy/curl-8.2.1.tar.bz2"
+  sha256 "0f1e31ebe336c09ec66381f1532f8350e466e1d02ffe10c4ac44a867f1b9d343"
   license "curl"
 
   livecheck do
@@ -45,7 +46,6 @@ class Curl < Formula
 
     # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
     args = %W[
-      --enable-debug
       --disable-dependency-tracking
       --disable-silent-rules
       --prefix=#{prefix}
