@@ -2,11 +2,12 @@ class Curl < Formula
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.se"
   # Don't forget to update both instances of the version in the GitHub mirror URL.
-  url "https://curl.se/download/curl-8.7.1.tar.bz2"
-  mirror "https://github.com/curl/curl/releases/download/curl-8_7_1/curl-8.7.1.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/curl-8.7.1.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/legacy/curl-8.7.1.tar.bz2"
-  sha256 "05bbd2b698e9cfbab477c33aa5e99b4975501835a41b7ca6ca71de03d8849e76"
+  # `url` goes below this comment when the `stable` block is removed.
+  url "https://curl.se/download/curl-8.13.0.tar.bz2"
+  mirror "https://github.com/curl/curl/releases/download/curl-8_13_0/curl-8.13.0.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/curl-8.13.0.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/legacy/curl-8.13.0.tar.bz2"
+  sha256 "e0d20499260760f9865cb6308928223f4e5128910310c025112f592a168e1473"
   license "curl"
 
   livecheck do
@@ -31,6 +32,7 @@ class Curl < Formula
   depends_on "libidn2"
   depends_on "libssh2"
   depends_on "openldap"
+  depends_on "perl"
   depends_on "rtmpdump"
   depends_on "zstd"
   depends_on "kevinburke/safe/rustls-ffi"
@@ -40,8 +42,8 @@ class Curl < Formula
   uses_from_macos "zlib"
 
   def install
-    inreplace "configure.ac", "capi/include", "include"
-    inreplace "configure.ac", "target/debug", "lib"
+    # inreplace "configure.ac", "capi/include", "include"
+    # inreplace "configure.ac", "target/debug", "lib"
     system "autoreconf", "-fi"
 
     # https://github.com/abetterinternet/crustls/wiki/Building-curl-with-crustls-and-Hyper
