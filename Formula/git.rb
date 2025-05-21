@@ -1,14 +1,12 @@
 class Git < Formula
 
-  VERSION = "2.41.0"
+  VERSION = "2.49.0"
 
   desc "Distributed revision control system"
   homepage "https://git-scm.com"
-  # Don't forget to update the documentation resources along with the url!
-  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-#{VERSION}.tar.xz"
-  sha256 "e748bafd424cfe80b212cbc6f1bbccc3a47d4862fb1eb7988877750478568040"
+  url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.49.0.tar.xz"
+  sha256 "618190cf590b7e9f6c11f91f23b1d267cd98c3ab33b850416d8758f8b5a85628"
   license "GPL-2.0-only"
-  revision 2
   head "https://github.com/git/git.git", branch: "master"
 
 
@@ -27,13 +25,21 @@ class Git < Formula
   uses_from_macos "zlib", since: :high_sierra
 
   resource "html" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-#{VERSION}.tar.xz"
-    sha256 "0cb2d4a09270eede7c1b686e2dfeac9bffef9e42c117a7e120f3cbb3e665d286"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-htmldocs-2.49.0.tar.xz"
+    sha256 "949e0392c749fd6265e5b040df07cc3226d0ea300c2c166171295881e7070671"
+
+    livecheck do
+      formula :parent
+    end
   end
 
   resource "man" do
-    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-#{VERSION}.tar.xz"
-    sha256 "bc7a4c944492c76fc3cd766ce22e826d0241e43792c611d4fdc068e0df545877"
+    url "https://mirrors.edge.kernel.org/pub/software/scm/git/git-manpages-2.49.0.tar.xz"
+    sha256 "2e4743168c4fba9729a50a1d7e52a5c94bc134a55df2e1bcee90762ebac2c4d7"
+
+    livecheck do
+      formula :parent
+    end
   end
 
   resource "Net::SMTP::SSL" do
