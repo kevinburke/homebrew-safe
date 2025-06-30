@@ -3,11 +3,11 @@ class Curl < Formula
   homepage "https://curl.se"
   # Don't forget to update both instances of the version in the GitHub mirror URL.
   # `url` goes below this comment when the `stable` block is removed.
-  url "https://curl.se/download/curl-8.13.0.tar.bz2"
-  mirror "https://github.com/curl/curl/releases/download/curl-8_13_0/curl-8.13.0.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/curl-8.13.0.tar.bz2"
-  mirror "http://fresh-center.net/linux/www/legacy/curl-8.13.0.tar.bz2"
-  sha256 "e0d20499260760f9865cb6308928223f4e5128910310c025112f592a168e1473"
+  url "https://curl.se/download/curl-8.14.1.tar.bz2"
+  mirror "https://github.com/curl/curl/releases/download/curl-8_14_1/curl-8.14.1.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/curl-8.14.1.tar.bz2"
+  mirror "http://fresh-center.net/linux/www/legacy/curl-8.14.1.tar.bz2"
+  sha256 "5760ed3c1a6aac68793fc502114f35c3e088e8cd5c084c2d044abdf646ee48fb"
   license "curl"
 
   livecheck do
@@ -57,23 +57,17 @@ class Curl < Formula
       --without-nghttp2
       --without-metalink
       --without-secure-transport
-      --with-hyper=#{Formula["kevinburke/safe/hyper"].opt_prefix}
+      --with-zsh-functions-dir=#{zsh_completion}
+      --with-fish-functions-dir=#{fish_completion}
       --with-rustls=#{Formula["kevinburke/safe/rustls-ffi"].opt_prefix}
       --with-default-ssl-backend=rustls
     ]
 
-    cppflags = "-I#{Formula["kevinburke/safe/hyper"].opt_prefix}/include"
-    on_macos do
-      args << "--with-gssapi"
-      cppflags += " -framework Security"
+    args << if OS.mac?
+      "--with-gssapi"
+    else
+      "--with-gssapi=#{Formula["krb5"].opt_prefix}"
     end
-
-    on_linux do
-      args << "--with-gssapi=#{Formula["krb5"].opt_prefix}"
-    end
-
-    ENV.append "CPPFLAGS", cppflags
-    ENV.append "LDFLAGS", "-L#{Formula["kevinburke/safe/hyper"].opt_prefix}/lib"
 
     system "./configure", *args
     system "make", "install"
