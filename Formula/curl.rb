@@ -36,7 +36,6 @@ class Curl < Formula
   depends_on "rtmpdump"
   depends_on "zstd"
   depends_on "kevinburke/safe/rustls-ffi"
-  depends_on "kevinburke/safe/hyper"
 
   uses_from_macos "krb5"
   uses_from_macos "zlib"
