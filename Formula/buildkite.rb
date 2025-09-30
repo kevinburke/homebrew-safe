@@ -1,8 +1,8 @@
 class Buildkite < Formula
   desc "Buildkite CLI tool"
   homepage "https://github.com/kevinburke/buildkite"
-  url "https://github.com/kevinburke/buildkite/archive/v0.18.tar.gz"
-  sha256 "c83e352a129a66815f33aa9a6a25fe1f5f7ed5055343538974c1a7e63fb6c620"
+  url "https://github.com/kevinburke/buildkite/archive/v0.21.tar.gz"
+  sha256 "5dc20b73b053b18a7dc07bedad0baf342c0c0113746f3661bedf03e1ad8dac5f"
   license "MIT"
   head "https://github.com/kevinburke/buildkite.git", branch: "main"
 
