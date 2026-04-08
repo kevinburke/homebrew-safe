@@ -18,4 +18,11 @@ class Envdir < Formula
       system "go", "build", *std_go_args()
     end
   end
+
+  test do
+    (testpath/"env").mkpath
+    (testpath/"env"/"GREETING").write("hello world\n")
+    output = shell_output("#{bin}/envdir #{testpath}/env /usr/bin/env")
+    assert_match "GREETING=hello world", output
+  end
 end

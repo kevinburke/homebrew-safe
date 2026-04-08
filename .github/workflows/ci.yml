@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  HOMEBREW_NO_ANALYTICS: "1"
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+  HOMEBREW_NO_INSTALL_CLEANUP: "1"
+  HOMEBREW_NO_INSTALL_FROM_API: "1"
+  HOMEBREW_CACHE: /tmp/Homebrew-cache
+
+jobs:
+  test-tap:
+    runs-on: macos-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Normalize Homebrew environment
+        run: |
+          set -euo pipefail
+          taps_dir="$(brew --repo)/Library/Taps/homebrew"
+          core_repo="${taps_dir}/homebrew-core"
+          cask_repo="${taps_dir}/homebrew-cask"
+          mkdir -p "${taps_dir}"
+          if ! git -C "${core_repo}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            rm -rf "${core_repo}"
+            git clone --depth=1 https://github.com/Homebrew/homebrew-core "${core_repo}"
+          fi
+          if ! git -C "${cask_repo}" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+            rm -rf "${cask_repo}"
+            git clone --depth=1 https://github.com/Homebrew/homebrew-cask "${cask_repo}"
+          fi
+          brew update-reset "${core_repo}" "${cask_repo}"
+          git -C "${core_repo}" clean -ffdx
+          git -C "${cask_repo}" clean -ffdx
+          cellar="$(brew --cellar)"
+          caskroom="$(brew --caskroom)"
+          find "${cellar}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          find "${caskroom}" -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+          brew cleanup --prune-prefix
+
+      - name: Verify Homebrew environment
+        run: |
+          set -euo pipefail
+          brew doctor
+
+      - name: Tap repository
+        run: |
+          set -euo pipefail
+          brew tap --custom-remote kevinburke/safe "${GITHUB_WORKSPACE}"
+
+      - name: Verify formula syntax
+        run: |
+          set -euo pipefail
+          brew readall --eval-all kevinburke/safe
+
+      - name: Install and test formulae
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          formulae=(Formula/*.rb)
+          if [ "${#formulae[@]}" -eq 0 ]; then
+            echo "No formulae found in Formula/"
+            exit 1
+          fi
+          for path in "${formulae[@]}"; do
+            formula="kevinburke/safe/$(basename "${path%.rb}")"
+            echo "Installing ${formula}"
+            brew install --verbose --build-from-source "${formula}" </dev/null
+            echo "Testing ${formula}"
+            brew test "${formula}" </dev/null
+          done
+
+      - name: Re-check Homebrew environment
+        run: |
+          set -euo pipefail
+          brew doctor

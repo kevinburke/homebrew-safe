@@ -11,4 +11,11 @@ class RustlsFfi < Formula
   def install
     system "cargo", "capi", "install", "-vv", "--release", "--libdir", "lib", "--prefix=#{prefix}"
   end
+
+  test do
+    assert_predicate include/"rustls.h", :exist?
+    assert_predicate lib/"librustls.a", :exist?
+    assert_predicate lib/"librustls.dylib", :exist?
+    assert_predicate lib/"pkgconfig"/"rustls.pc", :exist?
+  end
 end

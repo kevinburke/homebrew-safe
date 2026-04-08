@@ -11,12 +11,15 @@ class Hyper < Formula
 
   def install
     ENV["RUSTFLAGS"] = "--cfg hyper_unstable_ffi"
-    # system "cargo", "build", "--release", "--features", "client,http1,http2,ffi", "--target-dir", buildpath
     system "cargo", "rustc", "--features", "client,http1,http2,ffi",
       "--release", "--crate-type", "cdylib", "--target-dir", buildpath
     (prefix/"lib").install Dir["release/libhyper.d"]
-    (prefix/"lib").install Dir["release/libhyper.rlib"]
     (prefix/"lib").install Dir["release/deps/libhyper.dylib"]
     (prefix/"include").install Dir["capi/include/hyper.h"]
+  end
+
+  test do
+    assert_predicate include/"hyper.h", :exist?
+    assert_predicate lib/"libhyper.dylib", :exist?
   end
 end
