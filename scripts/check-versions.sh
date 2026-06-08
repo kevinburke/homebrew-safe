@@ -29,21 +29,27 @@ gh_latest_tag() {
 
 extract_url_version() {
   # $1 = formula path, $2 = regex with one capture group
-  grep -m1 -Eo "$2" "$1" | head -1 | sed -E "s|$2|\1|"
+  local formula=$1 regex=$2 version
+  version=$(perl -ne 'BEGIN { $regex = shift @ARGV } if (/$regex/) { print "$1\n"; exit }' "$regex" "$formula")
+  if [[ -z "$version" ]]; then
+    printf 'failed to extract version from %s using regex %s\n' "$formula" "$regex" >&2
+    return 1
+  fi
+  printf '%s\n' "$version"
 }
 
 # buildkite
-cur=$(extract_url_version Formula/buildkite.rb 'buildkite/archive/v([0-9.]+)\.tar\.gz')
+cur=$(extract_url_version Formula/buildkite.rb 'buildkite/archive/(?:refs/tags/)?v([0-9.]+)\.tar\.gz')
 latest=$(gh_latest_tag kevinburke/buildkite)
 report buildkite "$cur" "$latest"
 
 # envdir
-cur=$(extract_url_version Formula/envdir.rb 'envdir/archive/v([0-9.]+)\.tar\.gz')
+cur=$(extract_url_version Formula/envdir.rb 'envdir/archive/(?:refs/tags/)?v([0-9.]+)\.tar\.gz')
 latest=$(gh_latest_tag kevinburke/envdir)
 report envdir "$cur" "$latest"
 
 # github-actions
-cur=$(extract_url_version Formula/github-actions.rb 'github-actions/archive/v([0-9.]+)\.tar\.gz')
+cur=$(extract_url_version Formula/github-actions.rb 'github-actions/archive/(?:refs/tags/)?v([0-9.]+)\.tar\.gz')
 latest=$(gh_latest_tag kevinburke/github-actions)
 report github-actions "$cur" "$latest"
 
@@ -53,12 +59,12 @@ latest=$(gh_latest_tag hyperium/hyper)
 report hyper "$cur" "$latest"
 
 # hostsfile
-cur=$(extract_url_version Formula/hostsfile.rb 'hostsfile/archive/([0-9.]+)\.tar\.gz')
+cur=$(extract_url_version Formula/hostsfile.rb 'hostsfile/archive/(?:refs/tags/)?v?([0-9.]+)\.tar\.gz')
 latest=$(gh_latest_tag kevinburke/hostsfile)
 report hostsfile "$cur" "$latest"
 
 # rustls-ffi
-cur=$(extract_url_version Formula/rustls-ffi.rb 'rustls-ffi/archive/v([0-9.]+)\.tar\.gz')
+cur=$(extract_url_version Formula/rustls-ffi.rb 'rustls-ffi/archive/(?:refs/tags/)?v([0-9.]+)\.tar\.gz')
 latest=$(gh_latest_tag rustls/rustls-ffi)
 report rustls-ffi "$cur" "$latest"
 
