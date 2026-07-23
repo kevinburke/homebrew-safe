@@ -25,6 +25,16 @@ jobs:
       - name: Normalize Homebrew environment
         run: |
           set -euo pipefail
+          installed_taps="$(brew tap)"
+          while IFS= read -r tap; do
+            case "${tap}" in
+              homebrew/* | "") ;;
+              # Hosted images may include third-party taps that Homebrew will
+              # not load without trust. Remove them before clearing the runner
+              # image's installed formulae and casks below.
+              *) brew untap --force "${tap}" ;;
+            esac
+          done <<<"${installed_taps}"
           taps_dir="$(brew --repo)/Library/Taps/homebrew"
           core_repo="${taps_dir}/homebrew-core"
           cask_repo="${taps_dir}/homebrew-cask"
@@ -55,6 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           brew tap --custom-remote kevinburke/safe "${GITHUB_WORKSPACE}"
+          brew trust kevinburke/safe
 
       - name: Verify formula syntax
         run: |
