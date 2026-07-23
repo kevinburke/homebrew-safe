@@ -19,6 +19,8 @@ class Git < Formula
   # bottle section omitted
 
   depends_on "pkgconf" => :build
+  # Git 2.55 builds and links its default Rust gitcore component with Cargo.
+  depends_on "rust" => :build
   depends_on "gettext"
   depends_on "pcre2"
 
