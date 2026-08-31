@@ -8,12 +8,15 @@ cd "$(dirname "$0")/.."
 red()   { printf '\033[31m%s\033[0m' "$*"; }
 green() { printf '\033[32m%s\033[0m' "$*"; }
 
+outdated=0
+
 report() {
   local name=$1 current=$2 latest=$3
   if [[ "$current" == "$latest" ]]; then
     printf '%-12s %s\n' "$name" "$(green "$current (current)")"
   else
     printf '%-12s %s -> %s\n' "$name" "$current" "$(red "$latest")"
+    outdated=1
   fi
 }
 
@@ -83,3 +86,7 @@ latest=$(curl --fail --silent --show-error --location https://mirrors.edge.kerne
   | sed -E 's/git-([0-9.]+)\.tar\.xz/\1/' \
   | sort -V | tail -1)
 report git "$cur" "$latest"
+
+if ((outdated)); then
+  exit 1
+fi

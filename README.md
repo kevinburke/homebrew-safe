@@ -16,9 +16,10 @@ https://alexgaynor.net/2020/may/27/science-on-memory-unsafety-and-security/ .
 
 #### curl
 
-Curl is compiled with the rustls and Hyper backend instead of openssl, which
-means that TLS connections are made with Rust. Note that this means TLS 1.1 and
-below are not supported.
+Curl is compiled with rustls instead of OpenSSL, which means that TLS
+connections are made with Rust. HTTP/2 support is provided by nghttp2; curl
+removed its experimental Hyper backend in version 8.12.0. Note that this means
+TLS 1.1 and below are not supported.
 
 #### git
 

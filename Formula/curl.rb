@@ -29,13 +29,12 @@ class Curl < Formula
   depends_on "libtool" => :build
   depends_on "pkg-config" => :build
   depends_on "brotli"
+  depends_on "kevinburke/safe/rustls-ffi"
   depends_on "libidn2"
-  depends_on "libssh2"
+  depends_on "libnghttp2"
   depends_on "openldap"
   depends_on "perl"
-  depends_on "rtmpdump"
   depends_on "zstd"
-  depends_on "kevinburke/safe/rustls-ffi"
 
   uses_from_macos "krb5"
   uses_from_macos "zlib"
@@ -51,22 +50,21 @@ class Curl < Formula
       --disable-silent-rules
       --prefix=#{prefix}
       --without-ca-path
+      --with-brotli=#{formula_opt_prefix("brotli")}
       --with-libidn2
-      --with-librtmp
       --without-libpsl
-      --without-nghttp2
-      --without-metalink
-      --without-secure-transport
+      --with-nghttp2=#{formula_opt_prefix("libnghttp2")}
+      --with-zstd=#{formula_opt_prefix("zstd")}
       --with-zsh-functions-dir=#{zsh_completion}
       --with-fish-functions-dir=#{fish_completion}
-      --with-rustls=#{Formula["kevinburke/safe/rustls-ffi"].opt_prefix}
+      --with-rustls=#{formula_opt_prefix("kevinburke/safe/rustls-ffi")}
       --with-default-ssl-backend=rustls
     ]
 
     args << if OS.mac?
       "--with-gssapi"
     else
-      "--with-gssapi=#{Formula["krb5"].opt_prefix}"
+      "--with-gssapi=#{formula_opt_prefix("krb5")}"
     end
 
     system "./configure", *args
@@ -82,8 +80,13 @@ class Curl < Formula
     system "#{bin}/curl", "-L", stable.url, "-o", filename
     filename.verify_checksum stable.checksum
 
+    curl_features = shell_output("#{bin}/curl-config --features").split("\n")
+    %w[HTTP2 brotli zstd].each do |feature|
+      assert_includes curl_features, feature
+    end
+
     system libexec/"mk-ca-bundle.pl", "test.pem"
-    assert_predicate testpath/"test.pem", :exist?
-    assert_predicate testpath/"certdata.txt", :exist?
+    assert_path_exists testpath/"test.pem"
+    assert_path_exists testpath/"certdata.txt"
   end
 end
