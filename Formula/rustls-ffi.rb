@@ -1,8 +1,8 @@
 class RustlsFfi < Formula
   desc "C bindings for rustls"
   homepage "https://github.com/rustls/rustls-ffi"
-  url "https://github.com/rustls/rustls-ffi/archive/v0.15.4.tar.gz"
-  sha256 "f9d7416a0e8a3678e4192244639ab0a5cadfd12802001dc1c43491a27f12d1bc"
+  url "https://github.com/rustls/rustls-ffi/archive/v0.15.5.tar.gz"
+  sha256 "5be0a6abd612e067349f6f4f1469672685a582d40c1469c28662edceb9273786"
   head "https://github.com/rustls/rustls-ffi.git", :branch => "main"
 
   depends_on "cargo-c" => :build

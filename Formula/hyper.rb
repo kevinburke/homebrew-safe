@@ -1,10 +1,10 @@
 class Hyper < Formula
-  VERSION = "1.11.1".freeze
+  VERSION = "1.12.0".freeze
 
   desc "HTTP implementation for Rust"
   homepage "https://github.com/hyperium/hyper"
   url "https://github.com/hyperium/hyper/archive/refs/tags/v#{VERSION}.tar.gz"
-  sha256 "6a3c412baffbb39f9869fa6a4a12663516697822f45beb352a09f0c6004edc46"
+  sha256 "d27deb550f5abcfa7a8ca865936235973f7b35f9f6f4e107356385206ea64e2c"
   head "https://github.com/hyperium/hyper.git"
 
   depends_on "rust" => :build
