@@ -1,4 +1,6 @@
 class Curl < Formula
+  MINIMUM_BROTLI_VERSION = "1.2.1".freeze
+
   desc "Get a file from an HTTP, HTTPS or FTP server"
   homepage "https://curl.se"
   # Don't forget to update both instances of the version in the GitHub mirror URL.
@@ -9,6 +11,7 @@ class Curl < Formula
   mirror "http://fresh-center.net/linux/www/legacy/curl-8.23.0.tar.bz2"
   sha256 "95b22eb32bf6d1fa6e3e9463bdb61cece3efc56d86576a9b3cbd428246a6d854"
   license "curl"
+  revision 1
 
   livecheck do
     url "https://curl.se/download/"
@@ -41,6 +44,14 @@ class Curl < Formula
   uses_from_macos "zlib"
 
   def install
+    # CVE-2026-111497: check the installed decoder, not the available formula.
+    brotli_pc = Formula["brotli"].opt_lib/"pkgconfig/libbrotlidec.pc"
+    brotli_version = Utils.safe_popen_read("pkg-config", "--modversion", brotli_pc.to_s).strip
+    unless brotli_version.match?(/\A\d+\.\d+\.\d+\z/) &&
+           Version.new(brotli_version) >= Version.new(MINIMUM_BROTLI_VERSION)
+      odie "Brotli >= #{MINIMUM_BROTLI_VERSION} is required; run `brew update && brew upgrade brotli`."
+    end
+
     # inreplace "configure.ac", "capi/include", "include"
     # inreplace "configure.ac", "target/debug", "lib"
     system "autoreconf", "-fi"
@@ -51,6 +62,7 @@ class Curl < Formula
       --disable-silent-rules
       --prefix=#{prefix}
       --without-ca-path
+      --with-brotli=#{Formula["brotli"].opt_prefix}
       --with-libidn2
       --with-librtmp
       --without-libpsl
@@ -76,6 +88,11 @@ class Curl < Formula
   end
 
   test do
+    output = shell_output("#{bin}/curl --version")
+    brotli_version = output[/\bbrotli\/(\d+\.\d+\.\d+)\b/, 1]
+    assert brotli_version, "curl must report the loaded Brotli decoder version: #{output}"
+    assert_operator Version.new(brotli_version), :>=, Version.new(MINIMUM_BROTLI_VERSION)
+
     # Fetch the curl tarball and see that the checksum matches.
     # This requires a network connection, but so does Homebrew in general.
     filename = (testpath/"test.tar.gz")

@@ -30,6 +30,31 @@ Use `objdump -p <binary>` to inspect the symbols for a given binary - they
 should point to the Homebrew compiled libs instead of e.g. `/usr/lib/curl.dylib`
 which is the default Mac version.
 
+### Brotli security updates
+
+The curl formula requires Brotli 1.2.1 or newer to address
+[CVE-2026-111497](https://github.com/google/brotli/releases/tag/v1.2.1).
+The build checks the installed decoder's pkg-config metadata and explicitly
+selects Homebrew's Brotli prefix. The formula test checks the decoder version
+reported by the built curl at runtime; CI runs this test. Git uses Brotli through
+this tap's libcurl, and its macOS formula test verifies that linkage.
+
+To update an existing installation:
+
+```bash
+set -euo pipefail
+brew update
+brew upgrade brotli
+brew reinstall --build-from-source kevinburke/safe/curl
+brew test kevinburke/safe/curl
+brew test kevinburke/safe/git
+brew linkage kevinburke/safe/curl
+brew linkage kevinburke/safe/git
+```
+
+Git does not need rebuilding when it dynamically links to the updated libcurl.
+Restart long-running processes using these libraries after upgrading them.
+
 ## Questions
 
 If you'd like to see a package here, please open a ticket!

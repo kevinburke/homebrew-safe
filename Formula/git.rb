@@ -226,6 +226,13 @@ class Git < Formula
 
     return unless OS.mac?
 
+    # HTTP operations must use this tap's libcurl, including its patched Brotli.
+    curl = Formula["kevinburke/safe/curl"]
+    curl_paths = [curl.opt_lib/"libcurl.4.dylib", curl.lib/"libcurl.4.dylib"].map(&:to_s)
+    linkage = Utils.safe_popen_read("otool", "-L", (libexec/"git-core/git-remote-http").to_s)
+    assert linkage.lines.any? { |line| curl_paths.include?(line.split.first) },
+           "git-remote-http must link to kevinburke/safe/curl: #{linkage}"
+
     # Check Net::SMTP or Net::SMTP::SSL works for git-send-email
     %w[foo bar].each { |f| touch testpath/f }
     system bin/"git", "add", "foo", "bar"
